@@ -1,4 +1,4 @@
-package drop
+package main
 
 import (
 	"fmt"
