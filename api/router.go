@@ -21,6 +21,7 @@ func StartApi() {
 	
 	//Routes
 	r.HandleFunc("/get/studio", GetStudioHandler)
+	r.HandleFunc("/get/user", GetProfileHandler)
     log.Fatal(srv.ListenAndServe())
 }
 
