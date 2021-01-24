@@ -1,0 +1,23 @@
+version: '3.3'
+services:
+  drop-api:
+    container_name: 'drop-api'
+    build: './drop-api'
+    ports:
+      - '8080:8080'
+    depends_on:
+      - 'mongo'
+  # web:
+  #   container_name: 'web'
+  #   image: 'nginx:latest'
+  #   ports:
+  #     - '8081:80'
+  #   volumes:
+  #     - './web:/usr/share/nginx/html'
+  #   depends_on:
+  #     - 'api'
+  mongo:
+    image: 'mongo:latest'
+    container_name: 'mongo'
+    ports:
+      - '27100:27017'

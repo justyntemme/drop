@@ -2,7 +2,6 @@ FROM golang:latest AS build
 WORKDIR /go/src/app
 COPY . .
 
-COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -mod vendor -a -installsuffix cgo -o app .
 
 FROM alpine:latest  
