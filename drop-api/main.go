@@ -4,7 +4,8 @@ import (
 	"fmt"
 )
 
-func main(){
+func main() {
 
 	fmt.Println("Starting drop ...")
+
 }
