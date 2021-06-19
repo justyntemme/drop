@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
-	"gitlab.com/nextwavedevs/drop/drop-api/database"
+	"gitlab.com/nextwavedevs/drop/database"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -26,7 +26,7 @@ var userCollection = database.DB().Database("drop").Collection("users") // get c
 
 // Create Profile or Signup
 
-func createProfile(w http.ResponseWriter, r *http.Request) {
+func CreateProfile(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json") // for adding Content-type
 

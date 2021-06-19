@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"net/http"
 
+	"gitlab.com/nextwavedevs/drop/dal"
+
 	"github.com/gorilla/mux"
-	"github.com/nextwavedevs/drop/dal"
 )
 
 func GetProfileHandler(w http.ResponseWriter, r *http.Request) {
