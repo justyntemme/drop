@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"gitlab.com/nextwavedevs/drop/dal"
 )
 
 func StartApi() {
@@ -22,7 +23,14 @@ func StartApi() {
 	//Routes
 	r.HandleFunc("/get/studio", GetStudioHandler)
 	r.HandleFunc("/get/user", GetProfileHandler)
+	r.HandleFunc("/create/user", CreateUserHandler)
 	log.Fatal(srv.ListenAndServe())
+}
+
+func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
+	log.Print("Create Profile Endpoint Hit")
+	dal.CreateProfile(w, r)
+
 }
 
 func GetStudioHandler(w http.ResponseWriter, r *http.Request) {

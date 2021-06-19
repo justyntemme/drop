@@ -3,12 +3,13 @@ package main
 import (
 	"fmt"
 
-	"gitlab.com/nextwavedevs/drop/drop-api/router"
+	"gitlab.com/nextwavedevs/drop/api"
 )
 
 func main() {
 
 	fmt.Println("Starting drop ...")
-	router.StartApi()
+	fmt.Println("testing")
+	api.StartApi()
 
 }
