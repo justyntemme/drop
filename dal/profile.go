@@ -40,13 +40,12 @@ func CreateProfile(w http.ResponseWriter, r *http.Request) {
 
 // Get Profile of a particular User by Name
 
-func GetUserById(ctx context.Context, w http.ResponseWriter, uid string) map[string]interface{} {
+func GetUserById(ctx context.Context, w http.ResponseWriter, uid string) string {
 
 	w.Header().Set("Content-Type", "application/json")
+	var user []bson.M
 
-	var result primitive.M //  an unordered representation of a BSON document which is a Map
 	//err := userCollection.FindOne(context.TODO(), bson.D{{"uid", uid}}).Decode(&result)
-	userResults := make([]userProfileResult, 0)
 
 	pipeline := make([]bson.M, 0)
 
@@ -58,7 +57,7 @@ func GetUserById(ctx context.Context, w http.ResponseWriter, uid string) map[str
 
 	pipeline = append(pipeline, matchStage)
 
-	data, err := userCollection.Aggregate(ctx, pipeline)
+	userProfileCursor, err := userCollection.Aggregate(ctx, pipeline)
 	if err != nil {
 		log.Println(err.Error())
 		fmt.Errorf("failed to execute aggregation %s", err.Error())
@@ -67,10 +66,11 @@ func GetUserById(ctx context.Context, w http.ResponseWriter, uid string) map[str
 		fmt.Println(err)
 	}
 
-	data.All(ctx, &userResults)
-	fmt.Print(userResults)
+	userProfileCursor.All(ctx, &user)
+	rawJson, err := json.Marshal(user)
+	fmt.Print(rawJson)
 
-	return result // returns a Map containing document
+	return string(rawJson) // returns a JSON String
 
 }
 

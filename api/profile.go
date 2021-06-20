@@ -17,6 +17,6 @@ func getProfile(w http.ResponseWriter, r *http.Request) {
 	result := dal.GetUserById(ctx, w, uid)
 
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "uid: %v\n", vars["uid"])
-	fmt.Print(result)
+	fmt.Fprintf(w, "%v\n", result)
+
 }
