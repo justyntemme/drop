@@ -21,20 +21,20 @@ stages:
   - vet
   - build
   - deploy
-QA:
+format:
   stage: format
   tags: 
   - test
   script:
     - go fmt $(go list ./... | grep -v /vendor/)
 
-QA:
+test:
   stage: test
   tags: 
   - test
   script:
     = go test -race $(go list ./... | grep -v /vendor/)
-QA:
+vet:
   stage: vet
   tags: 
   - test
