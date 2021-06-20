@@ -1,5 +1,5 @@
 image: golang:latest
-
+tags: test,vultr
 variables:
   # Please edit to your GitLab project
   REPO_NAME: gitlab.com/nextwavedevs/drop
