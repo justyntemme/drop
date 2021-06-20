@@ -33,20 +33,24 @@ test:
   tags: 
   - test
   script:
-    = go test -race $(go list ./... | grep -v /vendor/)
-vet:
-  stage: vet
-  tags: 
-  - test
-  script:
-    - go vet $(go list ./... | grep -v /vendor/)
+    - go test -race $(go list ./... | grep -v /vendor/)
+# vet:
+#   stage: vet
+#   tags: 
+#   - test
+#   script:
+#     - go vet $(go list ./... | grep -v /vendor/)
 
 compile:
   stage: build
   tags: 
   - test
   script:
-    - go build -race -ldflags "-extldflags '-static'" -o $CI_PROJECT_DIR/drop-api
-  artifacts:
-    paths:
-      - drop-api
+    - docker build $CI_PROJECT_DIR -t drop-api
+
+deploy-test:
+    stage: deploy
+    tags:
+    - test
+    script:
+    - docker run drop-api
