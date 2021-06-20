@@ -15,13 +15,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// struct for storing data
-type User struct {
-	Name string `json:name`
-	Age  int    `json:age`
-	City string `json:city`
-}
-
 var userCollection = database.DB().Database("drop").Collection("users") // get collection "users" from db() which returns *mongo.Client
 
 // Create Profile or Signup
@@ -47,23 +40,17 @@ func CreateProfile(w http.ResponseWriter, r *http.Request) {
 
 // Get Profile of a particular User by Name
 
-func GetUserProfile(w http.ResponseWriter, r *http.Request) {
+func GetUserProfile(w http.ResponseWriter, uid string) map[string]interface{} {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	var body User
-	e := json.NewDecoder(r.Body).Decode(&body)
-	if e != nil {
-		fmt.Print(e)
-	}
 	var result primitive.M //  an unordered representation of a BSON document which is a Map
-	err := userCollection.FindOne(context.TODO(), bson.D{{"name", body.Name}}).Decode(&result)
+	err := userCollection.FindOne(context.TODO(), bson.D{{"uid", uid}}).Decode(&result)
 	if err != nil {
-
 		fmt.Println(err)
-
 	}
-	json.NewEncoder(w).Encode(result) // returns a Map containing document
+
+	return result // returns a Map containing document
 
 }
 

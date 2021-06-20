@@ -20,10 +20,12 @@ func StartApi() {
 		ReadTimeout:  15 * time.Second,
 	}
 
-	//Routes
+	r.HandleFunc("/create/user", CreateUserHandler)
+
+	//get
 	r.HandleFunc("/get/studio", GetStudioHandler)
 	r.HandleFunc("/get/user", GetProfileHandler)
-	r.HandleFunc("/create/user", CreateUserHandler)
+
 	log.Fatal(srv.ListenAndServe())
 }
 
@@ -37,4 +39,8 @@ func GetStudioHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	w.WriteHeader(http.StatusOK)
 	fmt.Fprintf(w, "Category: %v\n", vars["studioId"])
+}
+
+func GetProfileHandler(w http.ResponseWriter, r *http.Request) {
+	getProfile(w, r)
 }
