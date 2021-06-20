@@ -3,7 +3,12 @@ image: docker:19.03.13
 services:
   - docker:19.03.13-dind
 
-
+  # When using dind service, you must instruct Docker to talk with
+  # the daemon started inside of the service. The daemon is available
+  # with a network connection instead of the default
+  # /var/run/docker.sock socket.
+  DOCKER_HOST: tcp://docker:2376
+  
 variables:
   # Please edit to your GitLab project
   REPO_NAME: gitlab.com/nextwavedevs/drop
