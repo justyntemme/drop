@@ -1,4 +1,8 @@
-image: golang:latest
+image: docker:19.03.13
+
+services:
+  - docker:19.03.13-dind
+
 
 variables:
   # Please edit to your GitLab project
@@ -21,19 +25,19 @@ stages:
   - vet
   - build
   - deploy
-format:
-  stage: format
-  tags: 
-  - test
-  script:
-    - go fmt $(go list ./... | grep -v /vendor/)
+# format:
+#   stage: format
+#   tags: 
+#   - test
+#   script:
+#     - go fmt $(go list ./... | grep -v /vendor/)
 
-test:
-  stage: test
-  tags: 
-  - test
-  script:
-    - go test -race $(go list ./... | grep -v /vendor/)
+#test:
+  # stage: test
+  # tags: 
+  # - test
+  # script:
+  #   - go test -race $(go list ./... | grep -v /vendor/)
 # vet:
 #   stage: vet
 #   tags: 
