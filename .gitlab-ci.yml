@@ -1,65 +1,39 @@
 image: docker:19.03.13
 
-services:
-  - docker:19.03.13-dind
-
+variables:
   # When using dind service, you must instruct Docker to talk with
   # the daemon started inside of the service. The daemon is available
   # with a network connection instead of the default
   # /var/run/docker.sock socket.
-DOCKER_HOST: tcp://docker:2376
-
-variables:
-  # Please edit to your GitLab project
+  DOCKER_HOST: tcp://docker:2376
   REPO_NAME: gitlab.com/nextwavedevs/drop
+  #
+  # The 'docker' hostname is the alias of the service container as described at
+  # https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#accessing-the-services.
+  # If you're using GitLab Runner 12.7 or earlier with the Kubernetes executor and Kubernetes 1.6 or earlier,
+  # the variable must be set to tcp://localhost:2376 because of how the
+  # Kubernetes executor connects services to the job container
+  # DOCKER_HOST: tcp://localhost:2376
+  #
+  # Specify to Docker where to create the certificates. Docker
+  # creates them automatically on boot, and creates
+  # `/certs/client` to share between the service and job
+  # container, thanks to volume mount from config.toml
+  DOCKER_TLS_CERTDIR: "/certs"
+  # These are usually specified by the entrypoint, however the
+  # Kubernetes executor doesn't run entrypoints
+  # https://gitlab.com/gitlab-org/gitlab-runner/-/issues/4125
+  DOCKER_TLS_VERIFY: 1
+  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
 
-# The problem is that to be able to use go get, one needs to put
-# the repository in the $GOPATH. So for example if your gitlab domain
-# is gitlab.com, and that your repository is namespace/project, and
-# the default GOPATH being /go, then you'd need to have your
-# repository in /go/src/gitlab.com/namespace/project
-# Thus, making a symbolic link corrects this.
+services:
+  - docker:19.03.13-dind
+
 before_script:
-  - mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
-  - ln -svf $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
-  - cd $GOPATH/src/$REPO_NAME
+  - docker info
 
-stages:
-  - test
-  - format
-  - vet
-  - build
-  - deploy
-# format:
-#   stage: format
-#   tags: 
-#   - test
-#   script:
-#     - go fmt $(go list ./... | grep -v /vendor/)
-
-#test:
-  # stage: test
-  # tags: 
-  # - test
-  # script:
-  #   - go test -race $(go list ./... | grep -v /vendor/)
-# vet:
-#   stage: vet
-#   tags: 
-#   - test
-#   script:
-#     - go vet $(go list ./... | grep -v /vendor/)
-
-compile:
+build:
   stage: build
-  tags: 
-  - test
   script:
-    - docker build $CI_PROJECT_DIR -t drop-api
-
-deploy-test:
-    stage: deploy
-    tags:
-    - test
-    script:
-    - docker run drop-api
+    - docker build -t drop-api .
+    - docker run drop-api # /script/to/run/tests
