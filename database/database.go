@@ -10,10 +10,19 @@ import (
 )
 
 func DB() *mongo.Client {
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	credential := options.Credential{
+		Username: "admin",
+		Password: "nKH.=XdYp#-ECw,=gW",
+	}
+	clientOpts := options.Client().ApplyURI("mongodb://144.202.66.168:27018").SetAuth(credential)
 
 	// Connect to MongoDB
-	client, err := mongo.Connect(context.TODO(), clientOptions)
+
+	client, err := mongo.Connect(context.TODO(), clientOpts)
+	if err != nil {
+		log.Fatal(err)
+	}
+	_ = client
 
 	if err != nil {
 		log.Fatal(err)
