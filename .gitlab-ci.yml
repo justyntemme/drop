@@ -17,15 +17,23 @@ before_script:
 
 stages:
   - test
+  - format
+  - vet
   - build
   - deploy
-
-format:
-  stage: test
+QA:
+  stage: format
   script:
     - go fmt $(go list ./... | grep -v /vendor/)
+
+QA:
+  stage: test
+  script:
+    = go test -race $(go list ./... | grep -v /vendor/)
+QA:
+  stage: vet
+  script:
     - go vet $(go list ./... | grep -v /vendor/)
-    - go test -race $(go list ./... | grep -v /vendor/)
 
 compile:
   stage: build
