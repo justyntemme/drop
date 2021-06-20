@@ -5,14 +5,15 @@ import (
 	"net/http"
 
 	"gitlab.com/nextwavedevs/drop/dal"
-
-	"github.com/gorilla/mux"
 )
 
-func GetProfileHandler(w http.ResponseWriter, r *http.Request) {
-	dal.GetUserProfile(w, r)
+func getProfile(w http.ResponseWriter, r *http.Request) {
+	vars := r.URL.Query()
+	uid := vars.Get("uid")
 
-	vars := mux.Vars(r)
+	result := dal.GetUserProfile(w, uid)
+
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, "Category: %v\n", vars["studioId"])
+	fmt.Fprintf(w, "uid: %v\n", vars["uid"])
+	fmt.Print(result)
 }
