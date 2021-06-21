@@ -1,34 +1,14 @@
-image: docker:19.03.12
+stages:
+  - publish
+  - deploy
 
 variables:
   TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
   TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
-  # When you use the dind service, you must instruct Docker to talk with
-  # the daemon started inside of the service. The daemon is available
-  # with a network connection instead of the default
-  # /var/run/docker.sock socket. Docker 19.03 does this automatically
-  # by setting the DOCKER_HOST in
-  # https://github.com/docker-library/docker/blob/d45051476babc297257df490d22cbd806f1b11e4/19.03/docker-entrypoint.sh#L23-L29
-  #
-  # The 'docker' hostname is the alias of the service container as described at
-  # https://docs.gitlab.com/ee/ci/docker/using_docker_images.html#accessing-the-services.
-  #
-  # Specify to Docker where to create the certificates. Docker
-  # creates them automatically on boot, and creates
-  # `/certs/client` to share between the service and job
-  # container, thanks to volume mount from config.toml
-  DOCKER_TLS_CERTDIR: "/certs"
 
-services:
-  - docker:19.03.12-dind
-
-before_script:
-  - docker info
 publish:
   image: docker:latest
   stage: publish
-  tags: 
-    - test
   services:
     - docker:dind
   script:
@@ -42,7 +22,6 @@ deploy:
   stage: deploy
   tags:
     - deployment
-    - test
   script:
     - chmod og= $ID_RSA
     - apk update && apk add openssh-client
@@ -50,3 +29,8 @@ deploy:
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker pull $TAG_COMMIT"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker container rm -f drop-api || true"
     - ssh -i $ID_RSA -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "docker run -d -p 80:80 --name drop-api $TAG_COMMIT"
+  environment:
+    name: production
+    url: http://your_server_IP
+  only:
+    - master
