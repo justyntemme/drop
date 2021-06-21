@@ -1,7 +1,8 @@
 stages:
+  - test
   - publish
   - deploy
-  - test
+
 
 variables:
   TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
@@ -12,7 +13,7 @@ test:
     - test
   stage: test
   script:
-    - go test
+    - go test ./...
 
 publish:
   image: docker:latest
