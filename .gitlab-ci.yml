@@ -25,6 +25,8 @@ before_script:
 
 build:
   stage: build
+  tags:
+    - test
   script:
     - docker build -t drop-api .
     - docker run drop-api # /script/to/run/tests
