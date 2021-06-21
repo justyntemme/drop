@@ -1,10 +1,18 @@
 stages:
   - publish
   - deploy
+  - test
 
 variables:
   TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
   TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
+test:
+  image: golang:latest
+  tags:
+    - test
+  stage: test
+  script:
+    - go test
 
 publish:
   image: docker:latest
@@ -18,6 +26,8 @@ publish:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker push $TAG_COMMIT
     - docker push $TAG_LATEST
+  only:
+    main
 
 deploy:
   image: alpine:latest
