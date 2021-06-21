@@ -13,6 +13,10 @@ func getProfile(w http.ResponseWriter, r *http.Request) {
 	ctx, _ := context.WithTimeout(context.Background(), 1*time.Second)
 	vars := r.URL.Query()
 	uid := vars.Get("uid")
+	if len(uid) == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	result := dal.GetUserById(ctx, w, uid)
 
