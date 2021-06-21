@@ -33,3 +33,5 @@ deploy:
   environment:
     name: test
     url: http://$SERVER_IP
+  only:
+    - main
