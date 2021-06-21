@@ -27,7 +27,7 @@ publish:
     - docker push $TAG_COMMIT
     - docker push $TAG_LATEST
   only:
-    main
+    - main
 
 deploy:
   image: alpine:latest
