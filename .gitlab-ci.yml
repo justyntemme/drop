@@ -8,6 +8,8 @@ variables:
 
 publish:
   image: docker:latest
+  tags:
+    - test
   stage: publish
   services:
     - docker:dind
@@ -19,6 +21,8 @@ publish:
 
 deploy:
   image: alpine:latest
+  tags:
+    - test
   stage: deploy
   tags:
     - deployment
