@@ -1,0 +1,109 @@
+{
+	"info": {
+		"_postman_id": "26b1d62c-bcab-4fd4-87b2-a8bb1859f8ce",
+		"name": "Dropp",
+		"description": "Test suite for drop-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "create-user",
+			"item": [
+				{
+					"name": "getUserById 200",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/create/user?name=justyn&age=24&city=St Louuis",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"create",
+								"user"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "justyn"
+								},
+								{
+									"key": "age",
+									"value": "24"
+								},
+								{
+									"key": "city",
+									"value": "St Louuis"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserById 400",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function(){\r",
+									"    pm.response.to.have.status(200);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/create/user?name=justyn&age=24&city=St Louuis",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"create",
+								"user"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "justyn"
+								},
+								{
+									"key": "age",
+									"value": "24"
+								},
+								{
+									"key": "city",
+									"value": "St Louuis"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
