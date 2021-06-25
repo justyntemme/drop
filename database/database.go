@@ -38,3 +38,14 @@ func DB() *mongo.Client {
 	fmt.Println("Connected to MongoDB!")
 	return client
 }
+
+//Client Database instance
+var Client *mongo.Client = DB()
+
+//OpenCollection is a  function makes a connection with a collection in the database
+func OpenCollection(client *mongo.Client, collectionName string) *mongo.Collection {
+
+	var collection *mongo.Collection = client.Database("drop").Collection(collectionName)
+
+	return collection
+}

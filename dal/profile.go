@@ -9,33 +9,59 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/pkg/errors"
 	"gitlab.com/nextwavedevs/drop/database"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-var userCollection = database.DB().Database("drop").Collection("users") // get collection "users" from db() which returns *mongo.Client
+/*todos*/
+/*work on the profile methods to handle logs and traces GET, GETby ID, UPDATE, DELETE*/
+/*Handle tracing*/
+
+// User manages the set of API's for user access.
+type Profile struct {
+	log *log.Logger
+	db  *mongo.Client
+}
+
+// New constructs a User for api access.
+func New(log *log.Logger, db *mongo.Client) Profile {
+	return Profile{
+		log: log,
+		db: db,
+	}
+}
+
+var userCollection *mongo.Collection = database.OpenCollection(database.Client, "profile") // get collection "profile" from db() which returns *mongo.Client
 
 // Create Profile or Signup
 
-func CreateProfile(w http.ResponseWriter, r *http.Request) {
+func (p Profile) CreateProfile(ctx context.Context, traceID string, u User) (User, error) {
 
-	w.Header().Set("Content-Type", "application/json") // for adding Content-type
-
-	var person User
-	err := json.NewDecoder(r.Body).Decode(&person) // storing in person variable of type user
-	if err != nil {
-		fmt.Print(err)
+	//validating the user input 
+	if err := Check(u); err != nil {
+		return User{}, errors.Wrap(err, "validating data")
 	}
-	insertResult, err := userCollection.InsertOne(context.TODO(), person)
+
+	//parsing the user input into the User model
+	person := User{
+		Name: u.Name,
+		City: u.City,
+		Age: u.Age,
+	}
+	
+	//inserting into mongo db
+	insertResult, err := userCollection.InsertOne(ctx, person)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Inserted a single document: ", insertResult)
-	json.NewEncoder(w).Encode(insertResult.InsertedID) // return the mongodb ID of generated document
-
+	fmt.Println("Inserted a single document: ", insertResult, "InsertID:", insertResult.InsertedID)
+	p.log.Printf("%s: %s", traceID, "profile.Create")
+	return person, nil
 }
 
 // Get Profile of a particular User by Name
