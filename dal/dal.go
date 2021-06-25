@@ -6,8 +6,3 @@ type User struct {
 	Age  int    `json:"age"`
 	City string `json:"city"`
 }
-
-type userProfileResult struct {
-	User  []User `bson:"user"`
-	Total int    `bson:"total"`
-}

@@ -64,14 +64,12 @@ func (p Profile) CreateProfile(ctx context.Context, traceID string, u User) (Use
 	return person, nil
 }
 
-// Get Profile of a particular User by Name
+// Get Profile of a particular User by id
 
 func GetUserById(ctx context.Context, w http.ResponseWriter, uid string) string {
 
 	w.Header().Set("Content-Type", "application/json")
-	var user []bson.M
-
-	//err := userCollection.FindOne(context.TODO(), bson.D{{"uid", uid}}).Decode(&result)
+	var result []bson.M
 
 	pipeline := make([]bson.M, 0)
 
@@ -88,15 +86,12 @@ func GetUserById(ctx context.Context, w http.ResponseWriter, uid string) string 
 		log.Println(err.Error())
 		fmt.Errorf("failed to execute aggregation %s", err.Error())
 	}
-	if err != nil {
-		fmt.Println(err)
-	}
 
-	userProfileCursor.All(ctx, &user)
-	rawJson, err := json.Marshal(user)
+	userProfileCursor.All(ctx, &result)
+	rawJson, err := json.Marshal(result)
 	fmt.Print(rawJson)
 
-	return string(rawJson) // returns a JSON String
+	return string(rawJson) // returns a raw JSON String
 
 }
 
