@@ -102,16 +102,17 @@ func (p Profile) GetUserById(ctx context.Context, traceID string, uid string) (m
 	}
 	log.Println(pipeline)
 
-	userProfileCursor.All(ctx, &result)
-	if result != nil {
-		rawJson, err := json.Marshal(result[0])
-		if err != nil {
-			log.Println(err)
-		}
-		log.Println(string(rawJson))
-		json.Unmarshal(rawJson, &user)
+	err = userProfileCursor.All(ctx, &result)
+	if result == nil {
+		return user, err
 
 	}
+	rawJson, err := json.Marshal(result[0])
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println(string(rawJson))
+	json.Unmarshal(rawJson, &user)
 
 	return user, nil // returns a raw JSON String
 
