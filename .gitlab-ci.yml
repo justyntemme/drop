@@ -56,6 +56,6 @@ post-deployment-testing:
         - test
     stage: post-deployment
     script:
-        - newman run .\Dropp.postman_collection.json
+        - newman run Dropp.postman_collection.json
     only:
         - main
