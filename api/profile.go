@@ -9,6 +9,7 @@ import (
 
 	"github.com/pkg/errors"
 	"gitlab.com/nextwavedevs/drop/dal"
+	"gitlab.com/nextwavedevs/drop/models"
 	"gitlab.com/nextwavedevs/drop/web"
 )
 
@@ -25,7 +26,7 @@ func (pg profileGroup) CreateUserHandler(ctx context.Context, w http.ResponseWri
 		return web.NewShutdownError("web value missing from context")
 	}
 
-	var u dal.User
+	var u models.User
 	//Decode user input
 	if err := web.Decode(r, &u); err != nil {
 		return errors.Wrap(err, "unable to decode payload")
@@ -42,17 +43,13 @@ func (pg profileGroup) CreateUserHandler(ctx context.Context, w http.ResponseWri
 
 // GetProfileByID gets the specified user.
 func (pg profileGroup) GetProfileById(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-
 	//Get the parameters coming from the request
 	v, ok := ctx.Value(web.KeyValues).(*web.Values)
 	if !ok {
 		return web.NewShutdownError("web value missing from context")
 	}
-
 	//take the id part from the request
-
 	uid := r.URL.Query().Get("id")
-
 	//Return 400 if no uid is provided
 	if uid == "" {
 		return web.Respond(ctx, w, nil, http.StatusBadRequest)
@@ -106,7 +103,7 @@ func (pg profileGroup) UpdateProfile(ctx context.Context, w http.ResponseWriter,
 		return web.NewShutdownError("web value missing from context")
 	}
 
-	var upd dal.User
+	var upd models.User
 	if err := web.Decode(r, &upd); err != nil {
 		return errors.Wrapf(err, "unable to decode payload")
 	}
