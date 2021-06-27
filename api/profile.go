@@ -17,14 +17,14 @@ type profileGroup struct {
 	profile dal.Profile
 }
 
-//profileAPI calling the createUser/Profile profile method 
+//profileAPI calling the createUser/Profile profile method
 func (pg profileGroup) CreateUserHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	log.Print("Create Profile Endpoint Hit")
 	v, ok := ctx.Value(web.KeyValues).(*web.Values)
 	if !ok {
-		return web.NewShutdownError("web value missing from context") 
+		return web.NewShutdownError("web value missing from context")
 	}
-	
+
 	var u dal.User
 	//Decode user input
 	if err := web.Decode(r, &u); err != nil {
@@ -50,16 +50,18 @@ func (pg profileGroup) GetProfileById(ctx context.Context, w http.ResponseWriter
 	}
 
 	//take the id part from the request
-	params := web.Param(r, "id")
-	usr, err := pg.profile.GetUserById(ctx, v.TraceID, params)
+
+	uid := r.URL.Query().Get("id")
+
+	usr, err := pg.profile.GetUserById(ctx, v.TraceID, uid)
 	if err != nil {
 		switch errors.Cause(err) {
 		case dal.ErrInvalidID:
-			return  dal.NewRequestError(err, http.StatusBadRequest)
+			return dal.NewRequestError(err, http.StatusBadRequest)
 		case dal.ErrNotFound:
 			return dal.NewRequestError(err, http.StatusNotFound)
 		default:
-			return errors.Wrapf(err, "ID: %s", params)
+			return errors.Wrapf(err, "ID: %s", uid)
 		}
 	}
 	return web.Respond(ctx, w, usr, http.StatusOK)
