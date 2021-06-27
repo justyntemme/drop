@@ -53,6 +53,11 @@ func (pg profileGroup) GetProfileById(ctx context.Context, w http.ResponseWriter
 
 	uid := r.URL.Query().Get("id")
 
+	//Return 400 if no uid is provided
+	if uid == "" {
+		return web.Respond(ctx, w, nil, http.StatusBadRequest)
+	}
+
 	usr, err := pg.profile.GetUserById(ctx, v.TraceID, uid)
 	if err != nil {
 		switch errors.Cause(err) {
