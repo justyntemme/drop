@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "26b1d62c-bcab-4fd4-87b2-a8bb1859f8ce",
+		"_postman_id": "dfc2a60b-cbd6-4dd2-8856-218219704369",
 		"name": "Dropp",
 		"description": "Test suite for drop-api",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -17,7 +17,7 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Status test\", function(){\r",
-									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.have.status(400);\r",
 									"})\r",
 									""
 								],
@@ -29,27 +29,23 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/create/user?name=justyn&age=24&city=St Louuis",
+							"raw": "137.220.51.120/v1/get/user",
 							"host": [
-								"localhost"
+								"137",
+								"220",
+								"51",
+								"120"
 							],
-							"port": "8080",
 							"path": [
-								"create",
+								"v1",
+								"get",
 								"user"
 							],
 							"query": [
 								{
-									"key": "name",
-									"value": "justyn"
-								},
-								{
-									"key": "age",
-									"value": "24"
-								},
-								{
-									"key": "city",
-									"value": "St Louuis"
+									"key": "uid",
+									"value": "c73ceddc-50b5-4ac8-80c5-32d6385e83b1",
+									"disabled": true
 								}
 							]
 						}
@@ -76,27 +72,22 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/create/user?name=justyn&age=24&city=St Louuis",
+							"raw": "137.220.51.120/v1/get/user?id=60035d152f2355126396353d",
 							"host": [
-								"localhost"
+								"137",
+								"220",
+								"51",
+								"120"
 							],
-							"port": "8080",
 							"path": [
-								"create",
+								"v1",
+								"get",
 								"user"
 							],
 							"query": [
 								{
-									"key": "name",
-									"value": "justyn"
-								},
-								{
-									"key": "age",
-									"value": "24"
-								},
-								{
-									"key": "city",
-									"value": "St Louuis"
+									"key": "id",
+									"value": "60035d152f2355126396353d"
 								}
 							]
 						}
