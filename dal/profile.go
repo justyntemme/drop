@@ -2,6 +2,7 @@ package dal
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -43,7 +44,7 @@ func (p Profile) CreateProfile(ctx context.Context, traceID string, u User) (Use
 
 	//parsing the user input into the User model
 	person := User{
-		ID:   GenerateID(),
+		UID:  GenerateID(),
 		Name: u.Name,
 		City: u.City,
 		Age:  u.Age,
@@ -60,23 +61,59 @@ func (p Profile) CreateProfile(ctx context.Context, traceID string, u User) (Use
 	return person, nil
 }
 
-// Get Profile of a particular User by id
+// // Get Profile of a particular User by id
+// func (p Profile) GetUserById(ctx context.Context, traceID string, uid string) (User, error) {
+
+// 	//Validate if the uid entered is in correct mode
+// 	if err := CheckID(uid); err != nil {
+// 		return User{}, ErrInvalidID
+// 	}
+
+// 	var result User //  an unordered representation of a BSON document which is a Map
+
+// 	err := userCollection.FindOne(ctx, bson.D{{Key: "_id", Value: uid}}).Decode(&result)
+// 	if err != nil {
+// 		fmt.Println(err)
+// 	}
+// 	log.Printf("%s: %s", traceID, "profile.GetUserById")
+
+// 	return result, nil // returns a raw JSON String
+// }
 func (p Profile) GetUserById(ctx context.Context, traceID string, uid string) (User, error) {
+	var result []bson.M
+	var user User
 
-	//Validate if the uid entered is in correct mode
-	if err := CheckID(uid); err != nil {
-		return User{}, ErrInvalidID
+	pipeline := make([]bson.M, 0)
+	log.Println("GetUserByID: ID: " + uid)
+
+	matchStage := bson.M{
+		"$match": bson.M{
+			"uid": uid,
+		},
 	}
 
-	var result User //  an unordered representation of a BSON document which is a Map
+	pipeline = append(pipeline, matchStage)
 
-	err := userCollection.FindOne(ctx, bson.D{{Key: "_id", Value: uid}}).Decode(&result)
+	userProfileCursor, err := userCollection.Aggregate(ctx, pipeline)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err.Error())
+		fmt.Errorf("failed to execute aggregation %s", err.Error())
 	}
-	log.Printf("%s: %s", traceID, "profile.GetUserById")
+	log.Println(pipeline)
 
-	return result, nil // returns a raw JSON String
+	userProfileCursor.All(ctx, &result)
+	if result != nil {
+		rawJson, err := json.Marshal(result[0])
+		if err != nil {
+			log.Println(err)
+		}
+		log.Println(string(rawJson))
+		json.Unmarshal(rawJson, &user)
+
+	}
+
+	return user, nil // returns a raw JSON String
+
 }
 
 //Update Profile of User
@@ -136,7 +173,7 @@ func (p Profile) DeleteProfile(ctx context.Context, traceID string, uid string) 
 
 	opts := options.Delete().SetCollation(&options.Collation{}) // to specify language-specific rules for string comparison, such as rules for lettercase
 
-	res, err := userCollection.DeleteOne(ctx, bson.D{{Key:"_id", Value: uid}}, opts)
+	res, err := userCollection.DeleteOne(ctx, bson.D{{Key: "_id", Value: uid}}, opts)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -162,8 +199,7 @@ func (p Profile) GetAllUsers(ctx context.Context, traceID string, pageNumber int
 	findOptionsOffset.SetLimit(int64(data.Offset))
 	findOptionPage.SetLimit(int64(data.RowsPerPage))
 
-	var results []*User                                   //slice for multiple documents
-
+	var results []*User //slice for multiple documents
 
 	cur, err := userCollection.Find(ctx, bson.D{{}}, findOptionsOffset, findOptionPage) //returns a *mongo.Cursor
 	if err != nil {

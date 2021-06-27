@@ -37,10 +37,10 @@ func TestGetUserById(t *testing.T) {
 			},
 
 			want: User{
-				ID: "60035d152f2355126396353d",
+				UID:  "60035d152f2355126396353d",
 				Name: "justyn",
-				City: "St. Louis",
-				Age: 24,
+				City: "america",
+				Age:  24,
 			},
 		},
 		{

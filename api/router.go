@@ -47,7 +47,7 @@ func StartApi(build string, shutdown chan os.Signal, log *log.Logger, db *mongo.
 	//Endpoins for profiles
 	app.Handle(http.MethodPost, "/v1/create", pg.CreateUserHandler)
 	app.Handle(http.MethodGet, "/v1/getall/{page}/{rows}", pg.GetAllProfile)
-	app.Handle(http.MethodGet, "/v1/get/{id}", pg.GetProfileById)
+	app.Handle(http.MethodGet, "/v1/get/user", pg.GetProfileById)
 	app.Handle(http.MethodPut, "/v1/update/{id}", pg.UpdateProfile)
 	app.Handle(http.MethodDelete, "/v1/delete/{id}", pg.deleteUser)
 
