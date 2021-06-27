@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/pkg/errors"
 	"gitlab.com/nextwavedevs/drop/dal"
 	"gitlab.com/nextwavedevs/drop/mid"
 	"gitlab.com/nextwavedevs/drop/web"
@@ -44,48 +43,23 @@ func StartApi(build string, shutdown chan os.Signal, log *log.Logger, db *mongo.
 	pg := profileGroup{
 		profile: dal.New(log, db),
 	}
-	
+
 	//Endpoins for profiles
-	app.Handle(http.MethodPost, "/create/user", pg.CreateUserHandler)
+	app.Handle(http.MethodPost, "/v1/create", pg.CreateUserHandler)
+	app.Handle(http.MethodGet, "/v1/getall/{page}/{rows}", pg.GetAllProfile)
+	app.Handle(http.MethodGet, "/v1/get/{id}", pg.GetProfileById)
+	app.Handle(http.MethodPut, "/v1/update/{id}", pg.UpdateProfile)
+	app.Handle(http.MethodDelete, "/v1/delete/{id}", pg.deleteUser)
+
+	// Accept CORS 'OPTIONS' preflight requests if config has been provided.
+	// Don't forget to apply the CORS middleware to the routes that need it.
+	// Example Config: `conf:"default:https://MY_DOMAIN.COM"`
+	if opts.corsOrigin != "" {
+		h := func(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+			return nil
+		}
+		app.Handle(http.MethodOptions, "/*", h)
+	}
 
 	return app
 }
-
-
-//Calling the instance of the Profile struct holding all the profile methods
-type profileGroup struct {
-	profile dal.Profile
-}
-
-//profileAPI calling the createUser/Profile profile method 
-func (pg profileGroup) CreateUserHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
-	log.Print("Create Profile Endpoint Hit")
-	v, ok := ctx.Value(web.KeyValues).(*web.Values)
-	if !ok {
-		return web.NewShutdownError("web value missing from context") 
-	}
-	
-	var u dal.User
-	//Decode user input
-	if err := web.Decode(r, &u); err != nil {
-		return errors.Wrap(err, "unable to decode payload")
-	}
-
-	usr, err := pg.profile.CreateProfile(ctx, v.TraceID, u)
-	if err != nil {
-		return errors.Wrapf(err, "Profile: %+v", &usr)
-	}
-
-	//Respond to the client
-	return web.Respond(ctx, w, usr, http.StatusCreated)
-}
-
-// func GetStudioHandler(w http.ResponseWriter, r *http.Request) {
-// 	vars := mux.Vars(r)
-// 	w.WriteHeader(http.StatusOK)
-// 	fmt.Fprintf(w, "Category: %v\n", vars["studioId"])
-// }
-
-// func GetProfileHandler(w http.ResponseWriter, r *http.Request) {
-// 	getProfile(w, r)
-// }

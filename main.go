@@ -48,17 +48,17 @@ func run(log *log.Logger) error {
 	cfg.Version.SVN = build
 	cfg.Version.Desc = "product of nextwavedevs"
 
-	if err := conf.Parse(os.Args[1:], "TEST", &cfg); err != nil {
+	if err := conf.Parse(os.Args[1:], "DROP", &cfg); err != nil {
 		switch err {
 		case conf.ErrHelpWanted:
-			usage, err := conf.Usage("TEST", &cfg)
+			usage, err := conf.Usage("DROP", &cfg)
 			if err != nil {
 				return errors.Wrap(err, "generating config usage")
 			}
 			fmt.Println(usage)
 			return nil
 		case conf.ErrVersionWanted:
-			version, err := conf.VersionString("TEST", &cfg)
+			version, err := conf.VersionString("DROP", &cfg)
 			if err != nil {
 				return errors.Wrap(err, "generating config version")
 			}

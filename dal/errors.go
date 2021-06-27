@@ -5,8 +5,13 @@ import (
 	"errors"
 )
 
-// ErrInvalidID occurs when an ID is not in a valid form.
-var ErrInvalidID = errors.New("ID is not in its proper form")
+// Set of error variables for CRUD operations.
+var (
+	ErrNotFound              = errors.New("not found")
+	ErrInvalidID             = errors.New("ID is not in its proper form")
+	ErrAuthenticationFailure = errors.New("authentication failed")
+	ErrForbidden             = errors.New("attempted action is not allowed")
+)
 
 // ErrorResponse is the form used for API responses from failures in the API.
 type ErrorResponse struct {
