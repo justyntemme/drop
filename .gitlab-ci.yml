@@ -2,6 +2,7 @@ stages:
   - test
   - publish
   - deploy
+  - post-deployment
 
 
 variables:
