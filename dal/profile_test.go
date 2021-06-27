@@ -2,70 +2,90 @@ package dal
 
 import (
 	"context"
-	"net/http"
-	"net/http/httptest"
+	"fmt"
 	"testing"
 )
 
+var dbc = DBContainer{
+	Image: "mongo:4.4.5",
+	Port:  "27017",
+}
+
 func TestGetUserById(t *testing.T) {
+	log, db, teardown := NewUnit(t, dbc)
+	t.Cleanup(teardown)
+
+	user := New(log, db)
 	c := context.Background()
-	writer := httptest.NewRecorder()
 	type args struct {
-		ctx context.Context
-		w   http.ResponseWriter
-		uid string
+		ctx     context.Context
+		traceID string
+		uid     string
 	}
 	tests := []struct {
 		name string
 		args args
-		want string
+		want User
 	}{
 		// TODO: Add test cases.
 		{
 			name: "success",
 			args: args{
-				ctx: c,
-				w:   writer,
-				uid: "60035d152f2355126396353d",
+				ctx:     c,
+				traceID: "00000000-0000-0000-0000-000000000000",
+				uid:     "60035d152f2355126396353d",
 			},
 
-			want: "[{\"City\":\"St. Louis\",\"ID\":\"00001\",\"_id\":\"60035d152f2355126396353d\",\"age\":24,\"name\":\"justyn\",\"uid\":\"60035d152f2355126396353d\"}]",
+			want: User{
+				ID: "60035d152f2355126396353d",
+				Name: "justyn",
+				City: "St. Louis",
+				Age: 24,
+			},
 		},
 		{
 			name: "empty string uid",
 			args: args{
-				ctx: c,
-				w:   writer,
-				uid: "",
+				ctx:     c,
+				traceID: "00000000-0000-0000-0000-000000000000",
+				uid:     "",
 			},
 
-			want: "null",
+			want: User{},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := GetUserById(tt.args.ctx, tt.args.w, tt.args.uid); got != tt.want {
+			got, err := user.GetUserById(tt.args.ctx, tt.args.traceID, tt.args.uid)
+			if err != nil {
+				fmt.Println("error in getuserbyid test")
+			}
+			if got != tt.want {
 				t.Errorf("GetUserById() = %v, want %v", got, tt.want)
-
 			}
 		})
 	}
 }
 
-func Test_updateProfile(t *testing.T) {
-	type args struct {
-		w http.ResponseWriter
-		r *http.Request
-	}
-	tests := []struct {
-		name string
-		args args
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			updateProfile(tt.args.w, tt.args.r)
-		})
-	}
-}
+// func Test_updateProfile(t *testing.T) {
+// 	log, db, teardown := NewUnit(t, dbc)
+// 	t.Cleanup(teardown)
+
+// 	user := New(log, db)
+
+// 	type args struct {
+// 		w http.ResponseWriter
+// 		r *http.Request
+// 	}
+// 	tests := []struct {
+// 		name string
+// 		args args
+// 	}{
+// 		// TODO: Add test cases.
+// 	}
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			user.UpdateProfile(tt.args.w, tt.args.r)
+// 		})
+// 	}
+// }
