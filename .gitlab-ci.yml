@@ -48,14 +48,14 @@ deploy:
   only:
     - main
 
-post-deployment:
-  needs:
-    - deploy
-  image: newman:latest
-  tags:
-    - test
-  stage: post-deployment
-  script:
-    - newman run .\Dropp.postman_collection.json
-only:
-  - main
+post-deployment-testing:
+    image: newman:latest
+    needs:
+        - deploy
+    tags:
+        - test
+    stage: post-deployment
+    script:
+        - newman run .\Dropp.postman_collection.json
+    only:
+        - main
