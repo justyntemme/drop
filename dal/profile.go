@@ -8,6 +8,7 @@ import (
 
 	"github.com/pkg/errors"
 	"gitlab.com/nextwavedevs/drop/database"
+	"gitlab.com/nextwavedevs/drop/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -35,15 +36,15 @@ var userCollection *mongo.Collection = database.OpenCollection(database.Client, 
 
 // Create Profile or Signup
 
-func (p Profile) CreateProfile(ctx context.Context, traceID string, u User) (User, error) {
+func (p Profile) CreateProfile(ctx context.Context, traceID string, u models.User) (models.User, error) {
 
 	//validating the user input
 	if err := Check(u); err != nil {
-		return User{}, errors.Wrap(err, "validating data")
+		return models.User{}, errors.Wrap(err, "validating data")
 	}
 
 	//parsing the user input into the User model
-	person := User{
+	person := models.User{
 		UID:  GenerateID(),
 		Name: u.Name,
 		City: u.City,
@@ -79,9 +80,9 @@ func (p Profile) CreateProfile(ctx context.Context, traceID string, u User) (Use
 
 // 	return result, nil // returns a raw JSON String
 // }
-func (p Profile) GetUserById(ctx context.Context, traceID string, uid string) (User, error) {
+func (p Profile) GetUserById(ctx context.Context, traceID string, uid string) (models.User, error) {
 	var result []bson.M
-	var user User
+	var user models.User
 
 	pipeline := make([]bson.M, 0)
 	log.Println("GetUserByID: ID: " + uid)
@@ -118,7 +119,7 @@ func (p Profile) GetUserById(ctx context.Context, traceID string, uid string) (U
 
 //Update Profile of User
 
-func (p Profile) UpdateProfile(ctx context.Context, traceID string, uid string, u User) error {
+func (p Profile) UpdateProfile(ctx context.Context, traceID string, uid string, u models.User) error {
 
 	//Validate uid
 	if err := CheckID(uid); err != nil {
@@ -156,7 +157,7 @@ func (p Profile) UpdateProfile(ctx context.Context, traceID string, uid string, 
 	}
 	updateResult := userCollection.FindOneAndUpdate(ctx, filter, update, &returnOpt)
 
-	var result User
+	var result models.User
 	_ = updateResult.Decode(&result)
 	log.Printf("%s: %s", traceID, "user.Update")
 
@@ -183,7 +184,7 @@ func (p Profile) DeleteProfile(ctx context.Context, traceID string, uid string) 
 	return nil
 }
 
-func (p Profile) GetAllUsers(ctx context.Context, traceID string, pageNumber int, rowsPerPage int) ([]*User, error) {
+func (p Profile) GetAllUsers(ctx context.Context, traceID string, pageNumber int, rowsPerPage int) ([]*models.User, error) {
 
 	data := struct {
 		Offset      int `db:"offset"`
@@ -199,7 +200,7 @@ func (p Profile) GetAllUsers(ctx context.Context, traceID string, pageNumber int
 	findOptionsOffset.SetLimit(int64(data.Offset))
 	findOptionPage.SetLimit(int64(data.RowsPerPage))
 
-	var results []*User //slice for multiple documents
+	var results []*models.User //slice for multiple documents
 
 	cur, err := userCollection.Find(ctx, bson.D{{}}, findOptionsOffset, findOptionPage) //returns a *mongo.Cursor
 	if err != nil {
@@ -207,7 +208,7 @@ func (p Profile) GetAllUsers(ctx context.Context, traceID string, pageNumber int
 	}
 	for cur.Next(ctx) { //Next() gets the next document for corresponding cursor
 
-		var elem User
+		var elem models.User
 		err := cur.Decode(&elem)
 		if err != nil {
 			log.Fatal(err)
