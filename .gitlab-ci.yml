@@ -46,3 +46,13 @@ deploy:
     url: http://$SERVER_IP
   only:
     - main
+
+postman-tests:
+  image: newman:latest
+  tags:
+    - test
+  stage: post-deployment
+  script:
+    - newman run .\Dropp.postman_collection.json
+only:
+  - main
