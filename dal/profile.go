@@ -104,7 +104,7 @@ func (p Profile) GetUserById(ctx context.Context, traceID string, uid string) (m
 
 	err = userProfileCursor.All(ctx, &result)
 	if result == nil {
-		return user, err
+		return user, ErrNotFound
 
 	}
 	rawJson, err := json.Marshal(result[0])
