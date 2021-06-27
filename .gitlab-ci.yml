@@ -48,7 +48,9 @@ deploy:
   only:
     - main
 
-postman-tests:
+post-deployment:
+  needs:
+    - deploy
   image: newman:latest
   tags:
     - test
