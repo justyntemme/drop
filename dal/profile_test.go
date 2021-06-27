@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"testing"
+
+	"gitlab.com/nextwavedevs/drop/models"
 )
 
 var dbc = DBContainer{
@@ -24,7 +26,7 @@ func TestGetUserById(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want User
+		want models.User
 	}{
 		// TODO: Add test cases.
 		{
@@ -32,13 +34,13 @@ func TestGetUserById(t *testing.T) {
 			args: args{
 				ctx:     c,
 				traceID: "00000000-0000-0000-0000-000000000000",
-				uid:     "60035d152f2355126396353d",
+				uid:     "701b5347-d7d9-4f0c-a96d-5405d958695b",
 			},
 
-			want: User{
-				UID:  "60035d152f2355126396353d",
+			want: models.User{
+				UID:  "701b5347-d7d9-4f0c-a96d-5405d958695b",
 				Name: "justyn",
-				City: "america",
+				City: "St Louis",
 				Age:  24,
 			},
 		},
@@ -50,7 +52,7 @@ func TestGetUserById(t *testing.T) {
 				uid:     "",
 			},
 
-			want: User{},
+			want: models.User{},
 		},
 	}
 	for _, tt := range tests {
