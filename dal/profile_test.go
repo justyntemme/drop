@@ -12,8 +12,7 @@ var dbc = DBContainer{
 }
 
 func TestGetUserById(t *testing.T) {
-	log, db, teardown := NewUnit(t, dbc)
-	t.Cleanup(teardown)
+	log, db, _ := NewUnit(t, dbc)
 
 	user := New(log, db)
 	c := context.Background()
