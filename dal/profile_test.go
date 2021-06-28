@@ -34,11 +34,11 @@ func TestGetUserById(t *testing.T) {
 			args: args{
 				ctx:     c,
 				traceID: "00000000-0000-0000-0000-000000000000",
-				uid:     "701b5347-d7d9-4f0c-a96d-5405d958695b",
+				uid:     "60d8ce9b4f95827ce9961432",
 			},
 
 			want: models.User{
-				UID:  "701b5347-d7d9-4f0c-a96d-5405d958695b",
+				UID:  "60d8ce9b4f95827ce9961432",
 				Name: "justyn",
 				City: "St Louis",
 				Age:  24,

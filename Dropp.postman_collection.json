@@ -7,10 +7,10 @@
 	},
 	"item": [
 		{
-			"name": "create-user",
+			"name": "get-user",
 			"item": [
 				{
-					"name": "getUserById 200",
+					"name": "getUserById 400",
 					"event": [
 						{
 							"listen": "test",
@@ -43,8 +43,8 @@
 							],
 							"query": [
 								{
-									"key": "uid",
-									"value": "c73ceddc-50b5-4ac8-80c5-32d6385e83b1",
+									"key": "id",
+									"value": "701b5347-d7d9-4f0c-a96d-5405d958695b",
 									"disabled": true
 								}
 							]
@@ -53,7 +53,7 @@
 					"response": []
 				},
 				{
-					"name": "getUserById 400",
+					"name": "getUserById 200",
 					"event": [
 						{
 							"listen": "test",
@@ -72,7 +72,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "137.220.51.120/v1/get/user?id=60035d152f2355126396353d",
+							"raw": "137.220.51.120/v1/get/user?id=60d8ce9b4f95827ce9961432",
 							"host": [
 								"137",
 								"220",
@@ -88,6 +88,48 @@
 								{
 									"key": "id",
 									"value": "60035d152f2355126396353d"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserById 404",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status test\", function(){\r",
+									"    pm.response.to.have.status(404);\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "137.220.51.120/v1/get/user?id=600",
+							"host": [
+								"137",
+								"220",
+								"51",
+								"120"
+							],
+							"path": [
+								"v1",
+								"get",
+								"user"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "600"
 								}
 							]
 						}
