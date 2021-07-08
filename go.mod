@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	github.com/ardanlabs/conf v1.4.0
+	github.com/brianvoe/gofakeit/v6 v6.5.0 // indirect
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0
 	github.com/go-playground/validator/v10 v10.6.1

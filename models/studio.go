@@ -1,16 +1,9 @@
 package models
 
 type Studio struct {
-	UID      string    `json:"uid"`
-	Name     string    `json:"name"`
-	Age      int       `json:"age"`
-	City     string    `json:"city"`
-	Listings []Listing `json:"listings"`
-}
-
-type Listing struct {
-	UID        string `json:"uid"`
-	Name       string `json:"name"`
-	Descrition int    `json:"description"`
-	City       string `json:"city"`
+	UID      string   `json:"uid" fake:"skip"`
+	Name     string   `json:"name" fake:"{company}"`
+	Address  Address  `json:"address" fake:"skip"`
+	Listings []string `json:"listingsIds" fake:"skip"`
+	About    string   `json:"about" fake:"{sentence:10}"`
 }
