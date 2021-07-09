@@ -51,6 +51,9 @@ func StartApi(build string, shutdown chan os.Signal, log *log.Logger, db *mongo.
 	app.Handle(http.MethodPut, "/v1/update/{id}", pg.UpdateProfile)
 	app.Handle(http.MethodDelete, "/v1/delete/{id}", pg.deleteUser)
 
+	//Endpoints for profiles
+	app.Handle(http.MethodGet, "/v1/get/listings", pg.GetAllListingsByCompanyIdHandler)
+
 	// Accept CORS 'OPTIONS' preflight requests if config has been provided.
 	// Don't forget to apply the CORS middleware to the routes that need it.
 	// Example Config: `conf:"default:https://MY_DOMAIN.COM"`
