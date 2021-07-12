@@ -67,3 +67,59 @@ func (p Profile) GetAllListingsByCompanyId(ctx context.Context, traceID string, 
 	return *studioWithListings, nil // returns a raw JSON String
 
 }
+
+func (p Profile) GetAllStudios(ctx context.Context, traceID string) ([]models.User, error) {
+	var result []bson.M
+	var users []models.User
+
+	pipeline := make([]bson.M, 0)
+
+	// matchStage := bson.M{
+	// 	"$sort": bson.M{
+	// 		"created": -1,
+	// 	},
+	// }
+	groupStage := bson.M{
+		"$match": bson.M{
+			"_id": bson.M{"$ne": ""},
+		},
+	}
+
+	// 	query = [
+	//     {
+	//         '$sort': {
+	//             'created': -1
+	//         }
+	//     },
+	//     {
+	//         $group: {
+	//             '_id':null,
+	//             'max':{'$first':"$$ROOT"}
+	//         }
+	//     }
+	// ]
+
+	pipeline = append(pipeline, groupStage)
+
+	userProfileCursor, err := userCollection.Aggregate(ctx, pipeline)
+	if err != nil {
+		log.Println(err.Error())
+		fmt.Errorf("failed to execute aggregation %s", err.Error())
+	}
+	log.Println(pipeline)
+
+	err = userProfileCursor.All(ctx, &result)
+	if result == nil {
+		return users, ErrNotFound
+
+	}
+	rawJson, err := json.Marshal(result)
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println(string(rawJson))
+	json.Unmarshal(rawJson, &users)
+
+	return users, nil // returns a raw JSON String
+
+}

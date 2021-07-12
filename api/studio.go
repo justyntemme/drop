@@ -2,24 +2,26 @@ package api
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	"github.com/pkg/errors"
 	"gitlab.com/nextwavedevs/drop/dal"
+	"gitlab.com/nextwavedevs/drop/models"
 	"gitlab.com/nextwavedevs/drop/web"
 )
 
 func (pg profileGroup) GetAllListingsByCompanyIdHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
 	//Get the parameters coming from the request
-	v, ok := ctx.Value(web.KeyValues).(*web.Values)
-	if !ok {
-		return web.NewShutdownError("web value missing from context")
-	}
+	v, _ := ctx.Value(web.KeyValues).(*web.Values)
+	// if !ok {
+	// 	return web.NewShutdownError("web value missing from context")
+	// }
 	//take the id part from the request
 	uid := r.URL.Query().Get("id")
 	//Return 400 if no uid is provided
 	if uid == "" {
-		return web.Respond(ctx, w, nil, http.StatusBadRequest)
+		return web.Respond(ctx, w, *new(models.User), http.StatusBadRequest)
 	}
 
 	//usr, err := pg.profile.GetUserById(ctx, v.TraceID, uid)
@@ -36,4 +38,20 @@ func (pg profileGroup) GetAllListingsByCompanyIdHandler(ctx context.Context, w h
 	}
 	return web.Respond(ctx, w, usr, http.StatusOK)
 
+}
+
+// GetAllProfile retrieves a list of existing users.
+func (pg profileGroup) GetAllStudiosHandler(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	log.Print("GetAll Profile Endpoint Hit")
+	v, ok := ctx.Value(web.KeyValues).(*web.Values)
+	if !ok {
+		return web.NewShutdownError("web value missing from context")
+	}
+
+	studios, err := pg.profile.GetAllStudios(ctx, v.TraceID)
+	if err != nil {
+		return errors.Wrap(err, "unable to query for profile")
+	}
+
+	return web.Respond(ctx, w, studios, http.StatusOK)
 }
