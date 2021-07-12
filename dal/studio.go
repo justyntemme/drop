@@ -6,21 +6,24 @@ import (
 	"fmt"
 	"log"
 
+	"gitlab.com/nextwavedevs/drop/database"
 	"gitlab.com/nextwavedevs/drop/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func (p Profile) GetAllListingsByCompanyId(ctx context.Context, traceID string, uid string) ([]models.Listing, error) {
+var StudiosCollection *mongo.Collection = database.OpenCollection(database.Client, "studios") // get collection "profile" from db() which returns *mongo.Client
+
+func (p Profile) GetAllListingsByCompanyId(ctx context.Context, traceID string, uid string) (models.Studio, error) {
 	var result []bson.M
-	var listings []models.Listing
+	studioWithListings := new(models.Studio)
 
 	pipeline := make([]bson.M, 0)
 	log.Println("GetAllListingsByCompanyId" + uid)
 
 	id, err := primitive.ObjectIDFromHex(uid)
 	if err != nil {
-
 	}
 
 	matchStage := bson.M{
@@ -31,29 +34,27 @@ func (p Profile) GetAllListingsByCompanyId(ctx context.Context, traceID string, 
 
 	lookupStage := bson.M{
 		"$lookup": bson.M{
-			"from":         "studios",
+			"from":         "listings",
 			"localField":   "listingsIds",
 			"foreignField": "uid",
-			"as":           "$$ROOT",
+			"as":           "listings",
 		},
 	}
 
-	replaceRootStage := bson.M{
-		"newRoot": "$listings",
-	}
+	pipeline = append(pipeline, matchStage, lookupStage)
 
-	pipeline = append(pipeline, matchStage, lookupStage, replaceRootStage)
-
-	ListingsCursor, err := userCollection.Aggregate(ctx, pipeline)
+	StudioCursor, err := StudiosCollection.Aggregate(ctx, pipeline)
 	if err != nil {
 		log.Println(err.Error())
 		fmt.Errorf("failed to execute aggregation %s", err.Error())
 	}
+	log.Println("-----------------------------------------------------")
 	log.Println(pipeline)
+	log.Println("-----------------------------------------------------")
 
-	err = ListingsCursor.All(ctx, &result)
+	err = StudioCursor.All(ctx, &result)
 	if result == nil {
-		return listings, ErrNotFound
+		return models.Studio{}, ErrNotFound
 
 	}
 	rawJson, err := json.Marshal(result[0])
@@ -61,8 +62,8 @@ func (p Profile) GetAllListingsByCompanyId(ctx context.Context, traceID string, 
 		log.Println(err)
 	}
 	log.Println(string(rawJson))
-	json.Unmarshal(rawJson, &listings)
+	json.Unmarshal(rawJson, &studioWithListings)
 
-	return listings, nil // returns a raw JSON String
+	return *studioWithListings, nil // returns a raw JSON String
 
 }

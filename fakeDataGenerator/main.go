@@ -44,7 +44,7 @@ func createData() {
 		l.Description = fake.Sentence(5)
 		l.UID = fake.UUID()
 
-		s.Listings = append(s.Listings, l.UID)
+		s.ListingIds = append(s.ListingIds, l.UID)
 
 		listings = append(listings, *l)
 		listingsCollection.InsertOne(nil, l)
