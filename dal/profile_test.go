@@ -44,16 +44,6 @@ func TestGetUserById(t *testing.T) {
 				Age:  24,
 			},
 		},
-		{
-			name: "empty string uid",
-			args: args{
-				ctx:     c,
-				traceID: "00000000-0000-0000-0000-000000000000",
-				uid:     "",
-			},
-
-			want: models.User{},
-		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
