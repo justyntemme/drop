@@ -4,18 +4,24 @@ package service;
 
 option go_package = "gitlab.com/nextwavedevs/drop/internal/grpc/service";
 
-import "gitlab.com/nextwavedevs/drop/internal/proto-files/domain/listing.proto";
+//import "gitlab.com/nextwavedevs/drop/internal/proto-files/domain/listing.proto";
 
 //RepositoryService Definition
 service ListingInfoService {
-	rpc add (domain.ListingInfo) returns (ListingInfoResponse);
+	rpc add (ListingInfo) returns (ListingInfoResponse);
 }
  
 message ListingInfoResponse {
-	domain.ListingInfo ListingInfo = 1;
+	ListingInfo ListingInfo = 1;
 	Error error = 2;
 }
 message Error {
 	string code = 1;
 	string message = 2;
+}
+
+message ListingInfo {
+	int64 listingId  = 1;
+	int64 userId = 2;
+	string description = 3;
 }
