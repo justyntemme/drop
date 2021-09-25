@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package domain;
 
-option go_package = "bitbucket-repository-management-service/internal/grpc/domain";
+option go_package = "gitlab.com/nextwavedevs/drop/internal/grpc/domain";
 
 message Repository {
 	int64 id  = 1;

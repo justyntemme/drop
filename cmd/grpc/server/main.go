@@ -1,9 +1,9 @@
 package main
 
 import (
-	"bitbucket-repository-management-service/internal/grpc/impl"
-	"bitbucket-repository-management-service/internal/grpc/service"
 	"fmt"
+	"gitlab.com/nextwavedevs/drop/internal/grpc/impl"
+	"gitlab.com/nextwavedevs/drop/internal/grpc/service"
 	"log"
 	"net"
 

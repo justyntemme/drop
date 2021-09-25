@@ -1,9 +1,9 @@
 package impl
 
 import (
-	"bitbucket-repository-management-service/internal/grpc/domain"
-	"bitbucket-repository-management-service/internal/grpc/service"
 	"context"
+	"gitlab.com/nextwavedevs/drop/internal/grpc/domain"
+	"gitlab.com/nextwavedevs/drop/internal/grpc/service"
 	"log"
 	"strconv"
 )
