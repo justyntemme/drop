@@ -14,7 +14,7 @@ func main() {
 	netListener := getNetListener(7000)
 	grpcServer := grpc.NewServer()
 
-	repositoryServiceImpl := impl.NewRepositoryServiceGrpcImpl()
+	ListingInfoImpl := impl.NewRepositoryServiceGrpcImpl()
 	service.RegisterRepositoryServiceServer(grpcServer, repositoryServiceImpl)
 
 	// start the server
