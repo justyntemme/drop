@@ -24,8 +24,8 @@ import (
 	"log"
 	"net"
 
+	pb "gitlab.com/nextwavedevs/drop/helloworld"
 	"google.golang.org/grpc"
-	pb "google.golang.org/grpc/examples/helloworld/helloworld"
 )
 
 const (
@@ -35,6 +35,12 @@ const (
 // server is used to implement helloworld.GreeterServer.
 type server struct {
 	pb.UnimplementedGreeterServer
+}
+
+//GetListingByID implements helloworld.ListingServer
+func (s *server) GetListingById(ctx context.Context, in *pb.GetListingByIdRequest) (*pb.ListingResponse, error) {
+	log.Printf("Received: %v", in.GetName())
+	return &pb.ListingResponse{id: 1}, nil
 }
 
 // SayHello implements helloworld.GreeterServer
@@ -49,7 +55,8 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterGreeterServer(s, &server{})
+
+	pb.RegisterListingServer(s, &server{})
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

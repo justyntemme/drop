@@ -14,7 +14,7 @@
 
 syntax = "proto3";
 
-option go_package = "google.golang.org/grpc/examples/helloworld/helloworld";
+option go_package = "gitlab.com/nextwavedevs/drop/helloworld";
 option java_multiple_files = true;
 option java_package = "io.grpc.examples.helloworld";
 option java_outer_classname = "HelloWorldProto";
@@ -25,6 +25,20 @@ package helloworld;
 service Greeter {
   // Sends a greeting
   rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+service Listing {
+  rpc GetListingById (GetListingByIdRequest) returns (ListingResponse) {}
+}
+
+message ListingResponse {
+  string id = 1;
+}
+
+
+// The request message containing the listing ID to search for
+message GetListingByIdRequest {
+  string id = 1;
 }
 
 // The request message containing the user's name.

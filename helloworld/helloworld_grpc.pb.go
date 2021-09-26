@@ -101,3 +101,89 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "helloworld/helloworld.proto",
 }
+
+// ListingClient is the client API for Listing service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ListingClient interface {
+	GetListingById(ctx context.Context, in *GetListingByIdRequest, opts ...grpc.CallOption) (*ListingResponse, error)
+}
+
+type listingClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewListingClient(cc grpc.ClientConnInterface) ListingClient {
+	return &listingClient{cc}
+}
+
+func (c *listingClient) GetListingById(ctx context.Context, in *GetListingByIdRequest, opts ...grpc.CallOption) (*ListingResponse, error) {
+	out := new(ListingResponse)
+	err := c.cc.Invoke(ctx, "/helloworld.Listing/GetListingById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ListingServer is the server API for Listing service.
+// All implementations must embed UnimplementedListingServer
+// for forward compatibility
+type ListingServer interface {
+	GetListingById(context.Context, *GetListingByIdRequest) (*ListingResponse, error)
+	mustEmbedUnimplementedListingServer()
+}
+
+// UnimplementedListingServer must be embedded to have forward compatible implementations.
+type UnimplementedListingServer struct {
+}
+
+func (UnimplementedListingServer) GetListingById(context.Context, *GetListingByIdRequest) (*ListingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetListingById not implemented")
+}
+func (UnimplementedListingServer) mustEmbedUnimplementedListingServer() {}
+
+// UnsafeListingServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ListingServer will
+// result in compilation errors.
+type UnsafeListingServer interface {
+	mustEmbedUnimplementedListingServer()
+}
+
+func RegisterListingServer(s grpc.ServiceRegistrar, srv ListingServer) {
+	s.RegisterService(&Listing_ServiceDesc, srv)
+}
+
+func _Listing_GetListingById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetListingByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ListingServer).GetListingById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/helloworld.Listing/GetListingById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ListingServer).GetListingById(ctx, req.(*GetListingByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// Listing_ServiceDesc is the grpc.ServiceDesc for Listing service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var Listing_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "helloworld.Listing",
+	HandlerType: (*ListingServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetListingById",
+			Handler:    _Listing_GetListingById_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "helloworld/helloworld.proto",
+}
