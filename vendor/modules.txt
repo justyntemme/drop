@@ -134,7 +134,6 @@ google.golang.org/grpc/status
 google.golang.org/grpc/tap
 # google.golang.org/grpc/examples v0.0.0-20210924222925-11437f66f20f
 ## explicit
-google.golang.org/grpc/examples/helloworld/helloworld
 # google.golang.org/protobuf v1.27.1
 ## explicit
 google.golang.org/protobuf/encoding/prototext
