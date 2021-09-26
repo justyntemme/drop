@@ -42,7 +42,7 @@ type server struct {
 //GetListingByID implements helloworld.ListingServer
 func (s *server) GetListingById(ctx context.Context, in *pb.GetListingByIdRequest) (*pb.ListingResponse, error) {
 	//log.Printf("Received: %v", in.GetName())
-	listing, err := dal.GetListingById(ctx, "00001", "1")
+	listing, err := dal.GetListingById(ctx, "00001", in.Id)
 	if err != nil {
 		log.Fatal(err)
 	}
