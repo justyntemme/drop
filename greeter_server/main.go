@@ -24,6 +24,7 @@ import (
 	"log"
 	"net"
 
+	db "gitlab.com/nextwavedevs/drop/database"
 	pb "gitlab.com/nextwavedevs/drop/protodrop"
 	"google.golang.org/grpc"
 )
@@ -51,6 +52,12 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 }
 
 func main() {
+	client := db.DB
+
+	listingCollection := db.OpenCollection("listings")
+
+	listingCollection.
+
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
