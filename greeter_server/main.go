@@ -35,12 +35,13 @@ const (
 // server is used to implement helloworld.GreeterServer.
 type server struct {
 	pb.UnimplementedGreeterServer
+	pb.UnimplementedListingServer
 }
 
 //GetListingByID implements helloworld.ListingServer
 func (s *server) GetListingById(ctx context.Context, in *pb.GetListingByIdRequest) (*pb.ListingResponse, error) {
-	log.Printf("Received: %v", in.GetName())
-	return &pb.ListingResponse{id: 1}, nil
+	//log.Printf("Received: %v", in.GetName())
+	return &pb.ListingResponse{Id: "1"}, nil
 }
 
 // SayHello implements helloworld.GreeterServer
