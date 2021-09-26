@@ -44,13 +44,9 @@ func main() {
 	lc := pb.NewListingClient(conn)
 
 	// Contact the server and print out its response.
-	// name := defaultName
-	// if len(os.Args) > 1 {
-	// 	name = os.Args[1]
-	// }
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-	// r, err := c.SayHello(ctx, &pb.HelloRequest{Name: name})
+
 	r, err := lc.GetListingById(ctx, &pb.GetListingByIdRequest{Id: "599f8512-528b-43a6-991c-d377654bcabd"})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)

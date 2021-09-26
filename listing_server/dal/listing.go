@@ -16,7 +16,7 @@ var userCollection *mongo.Collection = database.OpenCollection(database.Client, 
 
 func GetListingById(ctx context.Context, traceID string, uid string) (models.Listing, error) {
 	var result []bson.M
-	var user models.Listing
+	var listing models.Listing
 
 	pipeline := make([]bson.M, 0)
 	log.Println("GetUserByID: ID: " + uid)
@@ -38,7 +38,7 @@ func GetListingById(ctx context.Context, traceID string, uid string) (models.Lis
 
 	err = userProfileCursor.All(ctx, &result)
 	if result == nil {
-		return user, err
+		return listing, err
 
 	}
 	rawJson, err := json.Marshal(result[0])
@@ -46,8 +46,8 @@ func GetListingById(ctx context.Context, traceID string, uid string) (models.Lis
 		log.Println(err)
 	}
 	log.Println(string(rawJson))
-	json.Unmarshal(rawJson, &user)
+	json.Unmarshal(rawJson, &listing)
 
-	return user, nil // returns a raw JSON String
+	return listing, nil // returns a raw JSON String
 
 }

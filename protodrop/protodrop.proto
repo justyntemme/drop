@@ -13,6 +13,7 @@
 // limitations under the License.
 
 syntax = "proto3";
+import "gitlab.com/nextwavedevs/drop/shared/models";
 
 option go_package = "gitlab.com/nextwavedevs/drop/protodrop";
 option java_multiple_files = true;
@@ -21,11 +22,6 @@ option java_outer_classname = "protodrop";
 
 package protodrop;
 
-// The greeting service definition.
-service Greeter {
-  // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply) {}
-}
 
 service Listing {
   rpc GetListingById (GetListingByIdRequest) returns (ListingResponse) {}
@@ -33,6 +29,7 @@ service Listing {
 
 message ListingResponse {
   string id = 1;
+  models.Listing listing = 2;
 }
 
 
@@ -41,12 +38,3 @@ message GetListingByIdRequest {
   string id = 1;
 }
 
-// The request message containing the user's name.
-message HelloRequest {
-  string name = 1;
-}
-
-// The response message containing the greetings
-message HelloReply {
-  string message = 1;
-}
