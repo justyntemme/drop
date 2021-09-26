@@ -1,19 +1,29 @@
 package dal
 
 import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"log"
+
+	"gitlab.com/nextwavedevs/drop/database"
 	models "gitlab.com/nextwavedevs/drop/shared/models"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func (p Profile) GetListingById(ctx context.Context, traceID string, uid string) (models.User, error) {
+var userCollection *mongo.Collection = database.OpenCollection(database.Client, "listings") // get collection "listings" from db() which returns *mongo.Client
+
+func GetListingById(ctx context.Context, traceID string, uid string) (models.Listing, error) {
 	var result []bson.M
-	var user models.User
+	var user models.Listing
 
 	pipeline := make([]bson.M, 0)
 	log.Println("GetUserByID: ID: " + uid)
 
 	matchStage := bson.M{
 		"$match": bson.M{
-			"uid": uid,
+			"id": uid,
 		},
 	}
 
@@ -28,7 +38,7 @@ func (p Profile) GetListingById(ctx context.Context, traceID string, uid string)
 
 	err = userProfileCursor.All(ctx, &result)
 	if result == nil {
-		return user, ErrNotFound
+		return user, err
 
 	}
 	rawJson, err := json.Marshal(result[0])

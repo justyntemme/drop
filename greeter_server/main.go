@@ -24,7 +24,7 @@ import (
 	"log"
 	"net"
 
-	db "gitlab.com/nextwavedevs/drop/database"
+	"gitlab.com/nextwavedevs/drop/greeter_server/dal"
 	pb "gitlab.com/nextwavedevs/drop/protodrop"
 	"google.golang.org/grpc"
 )
@@ -42,7 +42,11 @@ type server struct {
 //GetListingByID implements helloworld.ListingServer
 func (s *server) GetListingById(ctx context.Context, in *pb.GetListingByIdRequest) (*pb.ListingResponse, error) {
 	//log.Printf("Received: %v", in.GetName())
-	return &pb.ListingResponse{Id: "1"}, nil
+	listing, err := dal.GetListingById(ctx, "00001", "1")
+	if err != nil {
+		log.Fatal(err)
+	}
+	return &pb.ListingResponse{Id: listing.UID}, nil
 }
 
 // SayHello implements helloworld.GreeterServer
@@ -52,11 +56,6 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 }
 
 func main() {
-	client := db.DB
-
-	listingCollection := db.OpenCollection("listings")
-
-	listingCollection.
 
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
