@@ -5,3 +5,7 @@ type Listing struct {
 	Title       string `json:"title"`
 	Description string `json:"description"`
 }
+
+type ListingSearchResult struct {
+	Listings []Listing `json":"listings"`
+}

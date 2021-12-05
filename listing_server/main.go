@@ -39,9 +39,9 @@ type server struct {
 	pb.UnimplementedListingServer
 }
 
-//GetListingByID implements helloworld.ListingServer
+//GetListingByID implements drop.ListingServer
 func (s *server) GetListingById(ctx context.Context, in *pb.GetListingByIdRequest) (*pb.ListingResponse, error) {
-	//log.Printf("Received: %v", in.GetName())
+	log.Printf("Received: %v", in.Id)
 	listing, err := dal.GetListingById(ctx, "00001", in.Id)
 	if err != nil {
 		log.Fatal(err)
