@@ -24,7 +24,6 @@ import (
 	"log"
 	"net"
 
-	"gitlab.com/nextwavedevs/drop/listing_server/dal"
 	pb "gitlab.com/nextwavedevs/drop/protodrop"
 	"google.golang.org/grpc"
 )
