@@ -1,3 +1,3 @@
-module gitlab.com/nextwavedevs/timeslotservice
+module gitlab.com/nextwavedevs/drop/timeslotservice
 
 go 1.17
