@@ -14,174 +14,86 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
-// GreeterClient is the client API for Greeter service.
+// TimeSlotServiceClient is the client API for TimeSlotService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type GreeterClient interface {
-	// Sends a greeting
-	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
+type TimeSlotServiceClient interface {
+	GetTimeSlotById(ctx context.Context, in *GetTimeSlotByIdRequest, opts ...grpc.CallOption) (*TimeSlotResponse, error)
 }
 
-type greeterClient struct {
+type timeSlotServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewGreeterClient(cc grpc.ClientConnInterface) GreeterClient {
-	return &greeterClient{cc}
+func NewTimeSlotServiceClient(cc grpc.ClientConnInterface) TimeSlotServiceClient {
+	return &timeSlotServiceClient{cc}
 }
 
-func (c *greeterClient) SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error) {
-	out := new(HelloReply)
-	err := c.cc.Invoke(ctx, "/protodrop.Greeter/SayHello", in, out, opts...)
+func (c *timeSlotServiceClient) GetTimeSlotById(ctx context.Context, in *GetTimeSlotByIdRequest, opts ...grpc.CallOption) (*TimeSlotResponse, error) {
+	out := new(TimeSlotResponse)
+	err := c.cc.Invoke(ctx, "/protodrop.TimeSlotService/GetTimeSlotById", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// GreeterServer is the server API for Greeter service.
-// All implementations must embed UnimplementedGreeterServer
+// TimeSlotServiceServer is the server API for TimeSlotService service.
+// All implementations must embed UnimplementedTimeSlotServiceServer
 // for forward compatibility
-type GreeterServer interface {
-	// Sends a greeting
-	SayHello(context.Context, *HelloRequest) (*HelloReply, error)
-	mustEmbedUnimplementedGreeterServer()
+type TimeSlotServiceServer interface {
+	GetTimeSlotById(context.Context, *GetTimeSlotByIdRequest) (*TimeSlotResponse, error)
+	mustEmbedUnimplementedTimeSlotServiceServer()
 }
 
-// UnimplementedGreeterServer must be embedded to have forward compatible implementations.
-type UnimplementedGreeterServer struct {
+// UnimplementedTimeSlotServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedTimeSlotServiceServer struct {
 }
 
-func (UnimplementedGreeterServer) SayHello(context.Context, *HelloRequest) (*HelloReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SayHello not implemented")
+func (UnimplementedTimeSlotServiceServer) GetTimeSlotById(context.Context, *GetTimeSlotByIdRequest) (*TimeSlotResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTimeSlotById not implemented")
 }
-func (UnimplementedGreeterServer) mustEmbedUnimplementedGreeterServer() {}
+func (UnimplementedTimeSlotServiceServer) mustEmbedUnimplementedTimeSlotServiceServer() {}
 
-// UnsafeGreeterServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to GreeterServer will
+// UnsafeTimeSlotServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TimeSlotServiceServer will
 // result in compilation errors.
-type UnsafeGreeterServer interface {
-	mustEmbedUnimplementedGreeterServer()
+type UnsafeTimeSlotServiceServer interface {
+	mustEmbedUnimplementedTimeSlotServiceServer()
 }
 
-func RegisterGreeterServer(s grpc.ServiceRegistrar, srv GreeterServer) {
-	s.RegisterService(&Greeter_ServiceDesc, srv)
+func RegisterTimeSlotServiceServer(s grpc.ServiceRegistrar, srv TimeSlotServiceServer) {
+	s.RegisterService(&TimeSlotService_ServiceDesc, srv)
 }
 
-func _Greeter_SayHello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(HelloRequest)
+func _TimeSlotService_GetTimeSlotById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTimeSlotByIdRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(GreeterServer).SayHello(ctx, in)
+		return srv.(TimeSlotServiceServer).GetTimeSlotById(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/protodrop.Greeter/SayHello",
+		FullMethod: "/protodrop.TimeSlotService/GetTimeSlotById",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(GreeterServer).SayHello(ctx, req.(*HelloRequest))
+		return srv.(TimeSlotServiceServer).GetTimeSlotById(ctx, req.(*GetTimeSlotByIdRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Greeter_ServiceDesc is the grpc.ServiceDesc for Greeter service.
+// TimeSlotService_ServiceDesc is the grpc.ServiceDesc for TimeSlotService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Greeter_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "protodrop.Greeter",
-	HandlerType: (*GreeterServer)(nil),
+var TimeSlotService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "protodrop.TimeSlotService",
+	HandlerType: (*TimeSlotServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SayHello",
-			Handler:    _Greeter_SayHello_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "protodrop/protodrop.proto",
-}
-
-// ListingClient is the client API for Listing service.
-//
-// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type ListingClient interface {
-	GetListingById(ctx context.Context, in *GetListingByIdRequest, opts ...grpc.CallOption) (*ListingResponse, error)
-}
-
-type listingClient struct {
-	cc grpc.ClientConnInterface
-}
-
-func NewListingClient(cc grpc.ClientConnInterface) ListingClient {
-	return &listingClient{cc}
-}
-
-func (c *listingClient) GetListingById(ctx context.Context, in *GetListingByIdRequest, opts ...grpc.CallOption) (*ListingResponse, error) {
-	out := new(ListingResponse)
-	err := c.cc.Invoke(ctx, "/protodrop.Listing/GetListingById", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-// ListingServer is the server API for Listing service.
-// All implementations must embed UnimplementedListingServer
-// for forward compatibility
-type ListingServer interface {
-	GetListingById(context.Context, *GetListingByIdRequest) (*ListingResponse, error)
-	mustEmbedUnimplementedListingServer()
-}
-
-// UnimplementedListingServer must be embedded to have forward compatible implementations.
-type UnimplementedListingServer struct {
-}
-
-func (UnimplementedListingServer) GetListingById(context.Context, *GetListingByIdRequest) (*ListingResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetListingById not implemented")
-}
-func (UnimplementedListingServer) mustEmbedUnimplementedListingServer() {}
-
-// UnsafeListingServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to ListingServer will
-// result in compilation errors.
-type UnsafeListingServer interface {
-	mustEmbedUnimplementedListingServer()
-}
-
-func RegisterListingServer(s grpc.ServiceRegistrar, srv ListingServer) {
-	s.RegisterService(&Listing_ServiceDesc, srv)
-}
-
-func _Listing_GetListingById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetListingByIdRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ListingServer).GetListingById(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/protodrop.Listing/GetListingById",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ListingServer).GetListingById(ctx, req.(*GetListingByIdRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-// Listing_ServiceDesc is the grpc.ServiceDesc for Listing service.
-// It's only intended for direct use with grpc.RegisterService,
-// and not to be introspected or modified (even as a copy)
-var Listing_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "protodrop.Listing",
-	HandlerType: (*ListingServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetListingById",
-			Handler:    _Listing_GetListingById_Handler,
+			MethodName: "GetTimeSlotById",
+			Handler:    _TimeSlotService_GetTimeSlotById_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

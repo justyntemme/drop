@@ -7,16 +7,17 @@ import (
 	"log"
 
 	"gitlab.com/nextwavedevs/drop/database"
-	models "gitlab.com/nextwavedevs/drop/shared/models"
+	"gitlab.com/nextwavedevs/drop/protodrop"
+	"gitlab.com/nextwavesdevs/drop/protodrop"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-var userCollection *mongo.Collection = database.OpenCollection(database.Client, "listings") // get collection "listings" from db() which returns *mongo.Client
+var userCollection *mongo.Collection = database.OpenCollection(database.Client, "timeSlots") // get collection "timeSlots" from db() which returns *mongo.Client
 
-func GetTimeSlotById(ctx context.Context, traceID string, uid string) (models.Listing, error) {
+func GetTimeSlotById(ctx context.Context, traceID string, uid string) (protodrop.TimeSlot, error) {
 	var result []bson.M
-	var listing models.Listing
+	var timeSlot protodrop.TimeSlot
 
 	pipeline := make([]bson.M, 0)
 	log.Println("GetUserByID: ID: " + uid)
@@ -38,7 +39,7 @@ func GetTimeSlotById(ctx context.Context, traceID string, uid string) (models.Li
 
 	err = userProfileCursor.All(ctx, &result)
 	if result == nil {
-		return listing, err
+		return timeSlot, err
 
 	}
 	rawJson, err := json.Marshal(result[0])
@@ -46,8 +47,8 @@ func GetTimeSlotById(ctx context.Context, traceID string, uid string) (models.Li
 		log.Println(err)
 	}
 	log.Println(string(rawJson))
-	json.Unmarshal(rawJson, &listing)
+	json.Unmarshal(rawJson, &timeSlot)
 
-	return listing, nil // returns a raw JSON String
+	return timeSlot, nil // returns a raw JSON String
 
 }

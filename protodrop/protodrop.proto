@@ -12,29 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-syntax = "proto3";
-import "gitlab.com/nextwavedevs/drop/shared/models";
-
+syntax            = "proto3";
 option go_package = "gitlab.com/nextwavedevs/drop/protodrop";
-option java_multiple_files = true;
-option java_package = "io.grpc.examples.protodrop";
-option java_outer_classname = "protodrop";
 
 package protodrop;
 
-
-service Listing {
-  rpc GetListingById (GetListingByIdRequest) returns (ListingResponse) {}
+service TimeSlotService {
+  rpc GetTimeSlotById(GetTimeSlotByIdRequest) returns (TimeSlotResponse) {}
 }
 
-message ListingResponse {
-  string id = 1;
-  models.Listing listing = 2;
+message TimeSlot {
+  string UID         = 1;
+  string Title       = 2;
+  string Description = 3;
 }
 
+message TimeSlotResponse {
+  string   id       = 1;
+  TimeSlot timeSlot = 2;
+}
 
 // The request message containing the listing ID to search for
-message GetListingByIdRequest {
+message GetTimeSlotByIdRequest {
   string id = 1;
 }
-
