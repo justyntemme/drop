@@ -8,7 +8,6 @@ import (
 
 	"gitlab.com/nextwavedevs/drop/database"
 	"gitlab.com/nextwavedevs/drop/protodrop"
-	"gitlab.com/nextwavesdevs/drop/protodrop"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
