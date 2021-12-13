@@ -1,4 +1,5 @@
 stages:
+  - lint
   - test
   - build
   - publish
@@ -10,13 +11,24 @@ stages:
 variables:
   TAG_LATEST: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:latest
   TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
+
+lint:
+  image: golang:latest
+  tags:
+    - lint
+  stage: lint
+  script:
+    - golint -set_exit_status $(go list ./... | grep -v /vendor/)
+
 test:
   image: golang:latest
   tags:
     - test
   stage: test
   script:
-    - go test ./...
+    - go test -short $(go list ./... | grep -v /vendor/
+    - go test -race -short $(go list ./... | grep -v /vendor/)
+    - go test -msan -short $(go list ./... | grep -v /vendor/)
 
 build:
   image:
