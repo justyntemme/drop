@@ -13,7 +13,7 @@ variables:
   TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
 
 lint:
-  image: golang:latest
+  image: cytopia/golint
   tags:
     - gitlab-org-docker
   stage: lint
