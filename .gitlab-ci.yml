@@ -18,10 +18,10 @@ lint:
     entrypoint: ["/usr/bin/env"]
 
   tags:
-    - cd timeslotservice
     - gitlab-org-docker
   stage: lint
   script:
+    - cd timeslotservice
     - golint -set_exit_status $(go list ./... | grep -v /vendor/)
 
 test:
