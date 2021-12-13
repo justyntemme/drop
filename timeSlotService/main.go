@@ -55,7 +55,7 @@ func main() {
 	}
 	s := grpc.NewServer()
 
-	pb.RegisterTimeSlotServiceServer(), &server{})
+	pb.RegisterTimeSlotServiceServer(&server{})
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
