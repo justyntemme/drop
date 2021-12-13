@@ -15,7 +15,7 @@ variables:
 lint:
   image: golang:latest
   tags:
-    - lint
+    - gitlab-org-docker
   stage: lint
   script:
     - golint -set_exit_status $(go list ./... | grep -v /vendor/)
@@ -23,7 +23,7 @@ lint:
 test:
   image: golang:latest
   tags:
-    - test
+    - gitlab-org-docker
   stage: test
   script:
     - go test -short $(go list ./... | grep -v /vendor/
@@ -45,8 +45,7 @@ build:
 deploy:
   image: alpine:latest
   tags:
-    - test
-    - deployment
+    - gitlab-org-docker
   stage: deploy
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
@@ -64,7 +63,7 @@ post-deployment-testing:
     needs:
         - deploy
     tags:
-        - test
+        - gitlab-org-docker
     stage: post-deployment
     script:
         - newman run Dropp.postman_collection.json
