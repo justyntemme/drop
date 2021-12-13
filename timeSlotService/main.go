@@ -25,6 +25,7 @@ import (
 	"net"
 
 	pb "gitlab.com/nextwavedevs/drop/protodrop"
+	"gitlab.com/nextwavedevs/drop/timeslotservice/dal"
 	"google.golang.org/grpc"
 )
 
@@ -40,7 +41,7 @@ type server struct {
 //GetListingByID implements drop.ListingServer
 func (s *server) GetTimeSlotById(ctx context.Context, in *pb.GetTimeSlotByIdRequest) (*pb.TimeSlotResponse, error) {
 	log.Printf("Received: %v", in.Id)
-	listing, err := dal.GetListingById(ctx, "00001", in.Id)
+	listing, err := dal.GetTimeSlotById(ctx, "00001", in.Id)
 	if err != nil {
 		log.Fatal(err)
 	}

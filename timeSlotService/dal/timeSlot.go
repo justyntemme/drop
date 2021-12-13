@@ -14,7 +14,7 @@ import (
 
 var userCollection *mongo.Collection = database.OpenCollection(database.Client, "timeSlots") // get collection "timeSlots" from db() which returns *mongo.Client
 
-func GetTimeSlotById(ctx context.Context, traceID string, uid string) (protodrop.TimeSlot, error) {
+func GetTimeSlotById(ctx context.Context, traceID string, uid string) (*protodrop.TimeSlot, error) {
 	var result []bson.M
 	var timeSlot protodrop.TimeSlot
 
@@ -38,7 +38,7 @@ func GetTimeSlotById(ctx context.Context, traceID string, uid string) (protodrop
 
 	err = userProfileCursor.All(ctx, &result)
 	if result == nil {
-		return timeSlot, err
+		return &timeSlot, err
 
 	}
 	rawJson, err := json.Marshal(result[0])
@@ -48,6 +48,6 @@ func GetTimeSlotById(ctx context.Context, traceID string, uid string) (protodrop
 	log.Println(string(rawJson))
 	json.Unmarshal(rawJson, &timeSlot)
 
-	return timeSlot, nil // returns a raw JSON String
+	return &timeSlot, nil // returns a raw JSON String
 
 }
