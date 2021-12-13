@@ -3,7 +3,7 @@ module gitlab.com/nextwavedevs/drop/timeslotservice
 go 1.17
 
 require (
-	gitlab.com/nextwavedevs/drop/protodrop v0.0.0-20211212211306-4e764ee0e0eb
+	gitlab.com/nextwavedevs/drop/protodrop v0.2.1
 	go.mongodb.org/mongo-driver v1.8.1
 	google.golang.org/grpc v1.42.0
 )
