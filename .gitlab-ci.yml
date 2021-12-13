@@ -21,7 +21,7 @@ lint:
     - gitlab-org-docker
   stage: lint
   script:
-    - cd timeslotservice
+    - cd /builds/nextwavedevs/drop/timeslotservice
     - golint -set_exit_status $(go list ./... | grep -v /vendor/)
 
 test:
@@ -32,7 +32,7 @@ test:
     - gitlab-org-docker
   stage: test
   script:
-    - cd timeslotservice
+    - cd /builds/nextwavedevs/drop/timeslotservice
     - go test -short $(go list ./... | grep -v /vendor/)
     - go test -race -short $(go list ./... | grep -v /vendor/)
     - go test -msan -short $(go list ./... | grep -v /vendor/)
