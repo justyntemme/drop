@@ -17,10 +17,15 @@ option go_package = "gitlab.com/nextwavedevs/drop/protodrop";
 
 package protodrop;
 
+service StudioService {
+  rpc GetStudioById(GetStudioByIdRequest) returns (SingleStudioResponse) {}
+}
+
 service TimeSlotService {
   rpc GetTimeSlotById(GetTimeSlotByIdRequest) returns (TimeSlotResponse) {}
 }
 
+//TimeSlot Service
 message TimeSlot {
   string UID         = 1;
   string Title       = 2;
@@ -34,5 +39,13 @@ message TimeSlotResponse {
 
 // The request message containing the listing ID to search for
 message GetTimeSlotByIdRequest {
+  string id = 1;
+}
+//Studio Service
+message StudioResponse {
+  string UID
+  []string TimeSlotIds
+}
+message GetStudioByIdRequest {
   string id = 1;
 }
