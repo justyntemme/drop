@@ -13,26 +13,19 @@ variables:
   TAG_COMMIT: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_NAME:$CI_COMMIT_SHORT_SHA
 
 lint:
-  image: 
-    name: cytopia/golint
-    entrypoint: ["/usr/bin/env"]
-
+  image: cytopia/golint
   tags:
     - gitlab-org-docker
   stage: lint
   script:
-    - cd /builds/nextwavedevs/drop/timeslotservice
     - golint -set_exit_status $(go list ./... | grep -v /vendor/)
 
 test:
-  image: 
-    name: golang:latest
-    entrypoint: ["/usr/bin/env"]
+  image: golang:latest
   tags:
     - gitlab-org-docker
   stage: test
   script:
-    - cd /builds/nextwavedevs/drop/timeslotservice
     - go test -short $(go list ./... | grep -v /vendor/)
     - go test -race -short $(go list ./... | grep -v /vendor/)
     - go test -msan -short $(go list ./... | grep -v /vendor/)
