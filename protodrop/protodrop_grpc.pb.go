@@ -14,6 +14,92 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
+// StudioServiceClient is the client API for StudioService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type StudioServiceClient interface {
+	GetStudioById(ctx context.Context, in *GetStudioByIdRequest, opts ...grpc.CallOption) (*SingleStudioResponse, error)
+}
+
+type studioServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewStudioServiceClient(cc grpc.ClientConnInterface) StudioServiceClient {
+	return &studioServiceClient{cc}
+}
+
+func (c *studioServiceClient) GetStudioById(ctx context.Context, in *GetStudioByIdRequest, opts ...grpc.CallOption) (*SingleStudioResponse, error) {
+	out := new(SingleStudioResponse)
+	err := c.cc.Invoke(ctx, "/protodrop.StudioService/GetStudioById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// StudioServiceServer is the server API for StudioService service.
+// All implementations must embed UnimplementedStudioServiceServer
+// for forward compatibility
+type StudioServiceServer interface {
+	GetStudioById(context.Context, *GetStudioByIdRequest) (*SingleStudioResponse, error)
+	mustEmbedUnimplementedStudioServiceServer()
+}
+
+// UnimplementedStudioServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedStudioServiceServer struct {
+}
+
+func (UnimplementedStudioServiceServer) GetStudioById(context.Context, *GetStudioByIdRequest) (*SingleStudioResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetStudioById not implemented")
+}
+func (UnimplementedStudioServiceServer) mustEmbedUnimplementedStudioServiceServer() {}
+
+// UnsafeStudioServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to StudioServiceServer will
+// result in compilation errors.
+type UnsafeStudioServiceServer interface {
+	mustEmbedUnimplementedStudioServiceServer()
+}
+
+func RegisterStudioServiceServer(s grpc.ServiceRegistrar, srv StudioServiceServer) {
+	s.RegisterService(&StudioService_ServiceDesc, srv)
+}
+
+func _StudioService_GetStudioById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetStudioByIdRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StudioServiceServer).GetStudioById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/protodrop.StudioService/GetStudioById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StudioServiceServer).GetStudioById(ctx, req.(*GetStudioByIdRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// StudioService_ServiceDesc is the grpc.ServiceDesc for StudioService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var StudioService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "protodrop.StudioService",
+	HandlerType: (*StudioServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetStudioById",
+			Handler:    _StudioService_GetStudioById_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "protodrop/protodrop.proto",
+}
+
 // TimeSlotServiceClient is the client API for TimeSlotService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
