@@ -1,3 +1,3 @@
-module gitlab.com/nextwavedevs/drop
+module github.com/justyntemme/drop
 
 go 1.15

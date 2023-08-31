@@ -1,4 +1,4 @@
-module gitlab.com/nextwavedevs/drop/timeslotservice
+module github.com/justyntemme/drop/timeslotservice
 
 go 1.17
 
