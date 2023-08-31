@@ -1,4 +1,4 @@
-module gitlab.com/nextwavedevs/drop/protodrop
+module github.com/justyntemme/drop/protodrop
 
 go 1.17
 
