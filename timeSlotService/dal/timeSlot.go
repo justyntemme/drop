@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log"
 
-	"gitlab.com/nextwavedevs/drop/protodrop"
-	"gitlab.com/nextwavedevs/drop/timeslotservice/database"
+	"github.com/justyntemme/drop/protodrop"
+	"github.com/justyntemme/drop/timeslotservice/database"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
