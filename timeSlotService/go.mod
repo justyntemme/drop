@@ -3,7 +3,6 @@ module github.com/justyntemme/drop/timeslotservice
 go 1.17
 
 require (
-	gitlab.com/nextwavedevs/drop/protodrop v0.2.1
 	go.mongodb.org/mongo-driver v1.8.1
 	google.golang.org/grpc v1.42.0
 )
